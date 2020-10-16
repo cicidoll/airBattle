@@ -9,10 +9,6 @@ function lotOfCreateEnemyAir(airNum,life){
     tempFor = ()=>{
         for(let i =0; i<airNum; i++) {
             let air = createAir(isMy=false, life);
-            let top = getRndInteger(0, enemyAirMaxTop);
-            let left = getRndInteger(0, enemyAirMaxLeft);
-            air.position = { top:top, left:left };
-            air.air.style.cssText += `top:${top}px; left:${left}px;`;
             enemyAirList.push(air);
         }        
     }
@@ -29,17 +25,9 @@ function lotOfCreateEnemyAir(airNum,life){
 function createAir(isMy, life){
     let myAir;
     if (isMy) {
-        myAir = new Air( life, { height: myAirSize.height, 
-                                 width: myAirSize.width } );
-        myAir.creatDom('div');
-        myAir.addElementID('myAir');
-        myAir.addFatherDom(myAirFather);
+        myAir = new myAirObject(life);
     } else if (!isMy) {
-        myAir = new Air( life , { height: enemyAirSize.height, 
-                                  width: enemyAirSize.width } );
-        myAir.creatDom('div');
-        myAir.addClassN('enemyAir');
-        myAir.addFatherDom(enemyAirFather);
+        myAir = new enemyAirObject(life);
     }
     return myAir;
 }
@@ -47,13 +35,10 @@ function createAir(isMy, life){
 /**
  * 敌机移动动画设置
  */
-function enemyAirMove(){
+function enemyAirListMove(){
     let enemyAirListForEach;
     enemyAirListForEach = enemyAirList.forEach( air => {
-        let newtop = getRndInteger( -air.position.top, enemyAirMaxTop - air.position.top);
-        let newLeft = getRndInteger( -air.position.left, enemyAirMaxLeft - air.position.left);
-        air.air.style.cssText += `transition:all ${enemyAirMoveTime}s ease 0s`;
-        air.air.style.cssText += `transform: translate(${newLeft}px,${newtop}px)`;
+        air.airMove()
     });
     enemyAirListForEach = null;
 }

@@ -38,4 +38,50 @@ class Air {
         //将节点插入DOM树中
         fatherElement.appendChild(this.air);        
     }
+
+}
+
+/**
+ * 由Air对象继承，新的敌机对象
+ */
+class enemyAirObject extends Air {
+    constructor(life){
+        super( life , { height: enemyAirSize.height, 
+                        width: enemyAirSize.width } );
+        this.creatDom('div');
+        this.addClassN('enemyAir');
+        this.addFatherDom(enemyAirFather);
+        this.addPosition();
+    }
+    
+    /**
+     * 添加战机随机移动动画
+     */
+    airMove(){
+        let newtop = getRndInteger( -this.position.top, enemyAirMaxTop - this.position.top);
+        let newLeft = getRndInteger( -this.position.left, enemyAirMaxLeft - this.position.left);
+        this.air.style.cssText += `transition:all ${enemyAirMoveTime}s ease 0s`;
+        this.air.style.cssText += `transform: translate(${newLeft}px,${newtop}px)`;
+    }
+
+    addPosition(){
+        let top = getRndInteger(0, enemyAirMaxTop);
+        let left = getRndInteger(0, enemyAirMaxLeft);
+        this.position = { top:top, left:left };
+        this.air.style.cssText += `top:${top}px; left:${left}px;`;
+    }
+
+}
+
+/**
+ * 由Air对象继承，新的我方战机对象
+ */
+class myAirObject extends Air {
+    constructor(life){
+        super( life, {  height: myAirSize.height, 
+                        width: myAirSize.width } );
+        this.creatDom('div');
+        this.addElementID('myAir');
+        this.addFatherDom(myAirFather);
+    }
 }

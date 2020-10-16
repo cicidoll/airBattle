@@ -18,8 +18,10 @@ window.onload = () => {
     //延时一帧的时间后启动timeBus总线
     timeBus = setTimeout(() => {
         /*****************************************************************/
+        //待施工，预计建立关卡控制器
         gameModeSet(0)
         /*****************************************************************/
+        //初始化我方战机
         myAir = createAir(isMy=true, myAirLife)
         myAirList.push(myAir);
         myAirDom = myAir.air;//创建我方战机，生命值为myAirLife
@@ -29,7 +31,7 @@ window.onload = () => {
         lotOfCreateEnemyAir(enemyAirNumber,enemyAirLife);//批量创建敌机对象，创建5个，生命值为3
         let enemyAirMoveTimeOut1;//敌方战机移动延时器1
         enemyAirMoveTimeOut1 = setTimeout(() => {
-            enemyAirMove();//敌机移动函数
+            enemyAirListMove();//敌机移动函数
             clearTimeout(enemyAirMoveTimeOut1);
             enemyAirMoveTimeOut1 = null;
         }, 1000/fps);//第二帧的时候开始添加敌方战机移动动画
@@ -56,7 +58,7 @@ window.onload = () => {
 
             if (!enemyAirMoveTimeOut2){
                 enemyAirMoveTimeOut2 = setTimeout(() => {//敌方战机移动逻辑延时器
-                    enemyAirMove();
+                    enemyAirListMove();
                     clearTimeout(enemyAirMoveTimeOut2);
                     enemyAirMoveTimeOut2 = null;
                 }, enemyAirMoveTime*1000+1000/fps);//延时一帧启动敌机移动动画                

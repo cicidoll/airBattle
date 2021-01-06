@@ -5,15 +5,11 @@
  */
 function lotOfCreateEnemyAir(airNum,life){
     //使用赋值的行为将for循环赋值给变量，当循环结束时，手动将变量置空，清理内存
-    let tempFor;
-    tempFor = ()=>{
+    (()=>{
         for(let i =0; i<airNum; i++) {
-            let air = createAir(isMy=false, life);
-            enemyAirList.push(air);
+            createAir(isMy=false, life);
         }        
-    }
-    tempFor();
-    tempFor = null;
+    })();//使用立即执行函数封装
 }
 
 /**
@@ -36,11 +32,9 @@ function createAir(isMy, life){
  * 敌机移动动画设置
  */
 function enemyAirListMove(){
-    let enemyAirListForEach;
-    enemyAirListForEach = enemyAirList.forEach( air => {
+    (enemyAirList.forEach( air => {
         air.airMove()
-    });
-    enemyAirListForEach = null;
+    }))();//使用立即执行函数封装
 }
 
 /**

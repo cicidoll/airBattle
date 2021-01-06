@@ -48,20 +48,24 @@ class enemyAirObject extends Air {
     constructor(life){
         super( life , { height: enemyAirSize.height, 
                         width: enemyAirSize.width } );
+        //参数初始化                
         this.creatDom('div');
         this.addClassN('enemyAir');
         this.addFatherDom(enemyAirFather);
         this.addPosition();
+        //添加进敌机列表
+        enemyAirList.push(this);
+        this.airMove();//初次移动
     }
     
     /**
      * 添加战机随机移动动画
      */
     airMove(){
-        let newtop = getRndInteger( -this.position.top, enemyAirMaxTop - this.position.top);
-        let newLeft = getRndInteger( -this.position.left, enemyAirMaxLeft - this.position.left);
-        this.air.style.cssText += `transition:all ${enemyAirMoveTime}s ease 0s`;
-        this.air.style.cssText += `transform: translate(${newLeft}px,${newtop}px)`;
+            let newtop = getRndInteger( -this.position.top, enemyAirMaxTop - this.position.top);
+            let newLeft = getRndInteger( -this.position.left, enemyAirMaxLeft - this.position.left);
+            this.air.style.cssText += `transition:all ${enemyAirMoveTime}s ease 0s`;
+            this.air.style.cssText += `transform: translate(${newLeft}px,${newtop}px)`;
     }
 
     addPosition(){
@@ -83,5 +87,6 @@ class myAirObject extends Air {
         this.creatDom('div');
         this.addElementID('myAir');
         this.addFatherDom(myAirFather);
+        myAirList.push(this);
     }
 }

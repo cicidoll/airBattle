@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html> 
 <html lang="en">
 
     <head>
@@ -91,5 +91,133 @@
             Router.init();
         </script>
     </body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div id="app">
+        <h1>作用域A</h1>
+        <input type="text" two-way-bind="test">
+        <h1 bind="test"></h1>
+    </div>
+    <hr />
+
+    <div id="apple">
+        <h1>作用域B</h1>
+        <input type="text" two-way-bind="test">
+        <h1 bind="test"></h1>
+    </div>
+    <hr />
+
+    <script type="text/javascript">
+        // vm -> view model； v -> view
+        // 自定义两个绑定“指令”一个是从vm->v的绑定，一个是双向绑定
+        var directive_bind = ['bind', 'two-way-bind'];
+        // 常量 声明该类型仅仅是vm->v 的DOM渲染
+        var DOM = 'DOM'
+            // 常量 声明该类型是双向绑定
+        var TWOWAY = 'TWOWAY'
+            // 新增两个作用域，用的是元素ID
+        var vm = new mvvm('app');
+        var vm2 = new mvvm('apple')
+
+        // 这是一个构造函数
+        // 用来返回一个可以被监测变化、有固定范围的vm
+        function mvvm(rootEle) {
+            this.scope = rootEle
+                // 监听vm
+            observe(this)
+                // 确定作用域 —— 同时为v -> vm做事件监听
+            fineScope(this)
+        }
+
+        function observe(vm) {
+            // 监听vm对象模型的改变
+            Object.observe(vm, function(changes) {
+                changes.forEach(function(change, i) {
+                    switch (change.type) {
+                        case 'add':
+                            fineScope(vm)
+                            break;
+                        case 'delete':
+                            fineScope(vm);
+                            break;
+                        case 'update':
+                            fineScope(vm);
+                            break;
+                        default:
+                            break;
+                    }
+                })
+            })
+        }
+
+        // vm的改变引起v的改变 此处是 vm -> v
+        function updateView(ele, value, type) {
+            if (type === DOM) {
+                if (value) {
+                    ele.innerHTML = value
+                } else {
+                    ele.innerHTML = ''
+                }
+
+            } else if (type == TWOWAY) {
+                if (value) {
+                    ele.value = value
+                } else {
+                    ele.value = ''
+                }
+            }
+        }
+
+        function fineScope(vm) {
+            var vmRootEle = document.getElementById(vm.scope)
+                // 递归遍历该作用域下的所有DOM
+            findChild(vmRootEle, vm)
+        }
+
+        function findChild(ele, vm) {
+            // 查找所有自定义属性：bind、two-way-bind
+            for (var i = 0; i < directive_bind.length; i++) {
+                // 如果DOM有我们的自定义绑定属性
+                if (ele.getAttribute(directive_bind[i]) && directive_bind[i] === 'bind') {
+                    // 则按 vm->v的方向进行渲染
+                    updateView(ele, vm[ele.getAttribute('bind')], DOM)
+                } else if (ele.getAttribute(directive_bind[i]) && directive_bind[i] === 'two-way-bind') {
+                    var attr = ele.getAttribute('two-way-bind')
+                        // 同理
+                    updateView(ele, vm[attr], TWOWAY)
+                        // 有点不同，这里是双向绑定，需要为该DOM增加事件监听
+                    twoWayBind(ele, attr, vm)
+                }
+            }
+            // 递归遍历
+            if (ele.hasChildNodes()) {
+                var sonNodes = ele.childNodes;
+                for (var j = 0; j < sonNodes.length; j++) {
+                    if (sonNodes[j].nodeType === 1) {
+                        findChild(sonNodes[j], vm)
+                    }
+                }
+            }
+        }
+
+        function twoWayBind(ele, prop, vm) {
+            // 局限性：本DOM只是用了input[text]，如果要监听其他input[x]应该要用对应的监听方法
+            ele.oninput = function() {
+                vm[prop] = ele.value
+            }
+        }
+    </script>
+</body>
 
 </html>

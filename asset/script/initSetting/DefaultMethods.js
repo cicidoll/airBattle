@@ -1,65 +1,4 @@
-const windowWidth = window.innerWidth ||
-                    document.documentElement.clientWidth ||
-                    document.body.clientWidth
-const windowHeight = window.innerHeight ||
-                     document.documentElement.clientHeight ||
-                     document.body.clientHeight
-
-// 我方战机生成的默认大小
-const myAirSize = { height: 0.15 * windowWidth, 
-                    width: 0.15 * windowWidth }
-
-// 我方战机生命值
-let myAirLife
-
-//生成敌机大小
-let enemyAirSize = {}
-
-// 游戏刷新率
-const fps = 60
-// 设置关卡回合刷新时间
-const roundTime = 10
-// 我方战机射击子弹速率，次数/秒
-let myAirBulletSpeed = 2
-// 敌方战机射击子弹速率，次数/秒
-let enemyAirBulletSpeed = 0.5
-
-// 敌方战机生成数量
-let enemyAirNumber
-// 敌方战机生命值
-let enemyAirLife
-// 敌方战机子弹攻击力
-let enemyAirBulletAttack
-
-// 生成敌机对象的DOM父节点
-const enemyAirFather = document.getElementById('newEnemyAirsArea')
-// 生成我方战机对象的DOM父节点
-const myAirFather = document.getElementById('battle')
-// 生成战机子弹对象的DOM父节点
-const bulletFather = document.getElementById('battle')
-
-// 敌机生成的随机最大高度
-let enemyAirMaxTop
-// 敌机生成的随机最大宽度
-let enemyAirMaxLeft
-// 敌方战机移动动画时间
-let enemyAirMoveTime
-
-// 设置子弹的大小，三种难度，由小到大。
-let bulletSize = [ { height:30, width:10 },
-                     { height:45, width:20 },
-                     { height:60, width:30 } ]
-
-// 设置我方子弹型号选择，默认为0
-let myAirBulletSizeSelect = 0
-// 设置敌方子弹型号选择，默认为0
-let enemyAirBulletSizeSelect = 0
-
-// 设置我方子弹移动速度，默认为5s。
-let myAirBulletMoveTime = 5
-// 设置敌方子弹移动速度
-let enemyAirBulletMoveTime
-
+import config from './Config.js'
 
 /**
  * 输入两个数字，返回包括min和包括max之间的一个随机数
@@ -83,9 +22,10 @@ function setHeight(element,height) {
  * 批量为DOM节点设置自适应高度
  */
 function setHeightBus(){
-  setHeight(document.getElementsByTagName('body')[0], windowHeight)
-  setHeight(document.getElementById('battle'), windowHeight)
-  setHeight(document.getElementById('newEnemyAirsArea'), 0.3 * windowHeight)
+  const height = config.windowHeight
+  setHeight(document.getElementsByTagName('body')[0], height)
+  setHeight(document.getElementById('battle'), height)
+  setHeight(document.getElementById('newEnemyAirsArea'), 0.3 * height)
 }
 
 /**
@@ -97,14 +37,23 @@ function setHeightBus(){
  */
 function unitConversion(string){
   let stringpx
-  if (string.includes('vw')){
-      stringpx = Number(string.substring(0,string.length-2)) / 100 * windowWidth
-  } else if (string.includes('vh')){
-      stringpx = Number(string.substring(0,string.length-2)) / 100 * windowHeight
-  }else if (string.includes('px')){
-      stringpx = Number(string.substring(0,string.length-2))
-  } else if (string == '0' ){
-      stringpx = 0
+  const stringNum = Number(string.substring(0,string.length-2))
+  if ( string.includes('vw') ) {
+    stringpx = stringNum / 100 * config.windowWidth
+  } else if (string.includes('vh')) {
+    stringpx = stringNum / 100 * config.windowHeight
+  }else if ( string.includes('px') ) {
+    stringpx = stringNum
+  } else if ( string == '0' ){
+    stringpx = 0
   }
   return stringpx
 }
+
+const DefaultMethods = {
+  getRndInteger,
+  setHeightBus,
+  unitConversion
+}
+
+export default DefaultMethods

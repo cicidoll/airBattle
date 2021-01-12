@@ -17,32 +17,39 @@
  * @return {Object} 返回传入函数执行后的结果
  */
 function debounce (func, wait, immediate) {
-    let timeout, result;//timeout定时器，result为函数执行返回结果
-    let debounced = function () {
-        let args = arguments;//定义函数当前参数
-        let context = this;//定义函数当前上下文
-        if (timeout) clearTimeout(timeout);//当定时器存在，将其清除，重新计时。
+  let timeout, result;//timeout定时器，result为函数执行返回结果
+  let debounced = function () {
+    // 定义函数当前参数
+    let args = arguments
+    // 定义函数当前上下文
+    let context = this
+    // 当定时器存在，将其清除，重新计时。
+    if (timeout) clearTimeout(timeout)
 
-        if (immediate) {
-            let callNow = !timeout;
-            timeout = setTimeout(()=>{
-                timeout = null;//将定时器置空
-            },wait);
-            //立即执行
-            if (callNow) result = func.apply(context,args);
-        } else {
-            //不会立即执行
-            timeout = setTimeout(() => {//箭头函数
-                result = func.apply(context,args);
-            },wait);
-        }
-        return result;
-    };
-    debounced.cancel = function (){
-        clearTimeout(timeout);//清除定时器
-        timeout = null;//因为timeout在闭包环境内，置null防止内存泄露
+    if (immediate) {
+      let callNow = !timeout
+      timeout = setTimeout( () => {
+        // 将定时器置空
+        timeout = null
+      }, wait)
+      //立即执行
+      if (callNow) result = func.apply(context,args)
+    } else {
+      // 不会立即执行
+      timeout = setTimeout( () => {
+        // 箭头函数
+        result = func.apply(context,args)
+      }, wait)
     }
-    return debounced;
+    return result
+  }
+  debounced.cancel = function () {
+    // 清除定时器
+    clearTimeout(timeout)
+    // 因为timeout在闭包环境内，置null防止内存泄露
+    timeout = null
+  }
+  return debounced
 }
 
 //节流
@@ -62,39 +69,54 @@ function debounce (func, wait, immediate) {
  * @return {Object} 返回传入函数执行后的结果
  */
 function throttle(func, wait, options) {
-    let context, args, timeout ,result;
-    let old = 0;//创建一个时间戳
-    if (!options) options = {};//若使用时未传参，则默认为空。
+  let context, args, timeout ,result
+  // 创建一个时间戳
+  let old = 0
+  // 若使用时未传参，则默认为空。
+  if (!options) { options = {} }
 
-    return ()=>{
-        context = this;//定义函数执行上下文
-        args = arguments;//定义函数执行的参数
-        let now = new Date().valueOf();//创建新的时间戳
+  return () => {
+    // 定义函数执行上下文
+    context = this
+    // 定义函数执行的参数
+    args = arguments
+    // 创建新的时间戳
+    let now = new Date().valueOf()
+    //1、第一次不会执行
+    if (options.leading === false && old === 0) {
+      // 更新旧时间戳。
+      old = now
+    }
 
-        //1、第一次不会执行
-        if (options.leading === false && old === 0) {
-            old = now;
-        };//更新旧时间戳。
-
-        //2、主要负责利用时间戳，执行func函数。
-        if (now - old > wait) {
-            //第一次会直接执行
-            if (timeout) {
-                clearTimeout(timeout);
-                timeout = null;
-            }//当定时器存在时，将其清除并置null，防止内存泄露。
-
-            result = func.apply(context, args);//执行函数
-            old = now;//更新旧时间戳
-
-        }else if (!timeout && options.trailing === true) {
-            //3、最后一次会被执行
-            timeout = setTimeout(()=>{
-                old = new Date().valueOf();//更新旧时间戳
-                timeout = null;//将定时器置空
-                result = func.apply(context, args);//执行func函数
-            },wait);
-        };
-        return result;
-    };
+    //2、主要负责利用时间戳，执行func函数。
+    if (now - old > wait) {
+      //第一次会直接执行
+      if (timeout) {
+        // 当定时器存在时，将其清除并置null，防止内存泄露。
+        clearTimeout(timeout)
+        timeout = null
+      }
+      // 执行函数
+      result = func.apply(context, args)
+      // 更新旧时间戳
+      old = now
+    }else if (!timeout && options.trailing === true) {
+      // 3、最后一次会被执行
+      timeout = setTimeout( () => {
+        // 更新旧时间戳
+        old = new Date().valueOf()
+        // 将定时器置空
+        timeout = null
+        // 执行func函数
+        result = func.apply(context, args)
+      }, wait)
+    }
+    return result
+  }
 }
+
+const UnderScore = {
+  debounce,
+  throttle
+}
+export default UnderScore

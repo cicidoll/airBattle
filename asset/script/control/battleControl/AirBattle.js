@@ -1,10 +1,11 @@
+import config from '../../initSetting/Config.js'
+
 /**
  * 批量创建敌机对象
  * @param {Number} airNum 需要生成的敌机对象数量
  * @param {Number} life 敌机的生命值
  */
-function lotOfCreateEnemyAir(airNum,life){
-  // 使用赋值的行为将for循环赋值给变量，当循环结束时，手动将变量置空，清理内存
+function lotOfCreateEnemyAir(airNum, life){
   // 使用立即执行函数封装
   ( () => {
     for(let i =0; i<airNum; i++) {
@@ -46,7 +47,7 @@ function enemyAirListMove(){
  */
 function DelEnemyAir(air, index) {
   if (air.life <= 0) {
-    enemyAirFather.removeChild(air.air)
+    config.enemyAirFather.removeChild(air.air)
     enemyAirList.splice(index,1)
     // 战机对象置空
     air = null
@@ -60,11 +61,23 @@ function DelEnemyAir(air, index) {
 function DelMyAir(myAir) {
   if (myAir.life <= 0) {
     try {
-      myAirFather.removeChild(myAir.air)
+      config.myAirFather.removeChild(myAir.air)
       // 战机置空
       myAir = null
-      alert('游戏结束！')
-      window.location.reload()
     } catch (error) {}
   }
+}
+
+/**
+ * 我方战机流程控制
+ * 初始化我方战机
+ */
+function myAirControl() {
+  //初始化游戏各类参数
+  myAirLife = 5//设置我方战机生命值
+  //创建对象
+  myAir = createAir(isMy=true, myAirLife)//创建我方战机，生命值为myAirLife
+  myAirDom = myAir.air//定义节点
+  //执行对象具体行为
+  myAirMoveBus()//启动我方战机移动控制总线
 }

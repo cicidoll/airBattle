@@ -1,5 +1,5 @@
 class Bullet {
-  constructor(size,attack = 3,position={}){
+  constructor(size, attack = 3, position={} ){
     this.size = size// 子弹模型的大小，以px为单位
     this.attack = attack// 子弹的威力，默认为3
     this.bullet = {}// 存放生成的DOM节点对象

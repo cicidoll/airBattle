@@ -1,3 +1,5 @@
+import config from '../initSetting/Config.js'
+
 /**
  * 战机的原型对象
  */
@@ -14,7 +16,8 @@ class Air {
   creatDom(label){
     //生成HTML节点,定义高度、宽度
     this.air = document.createElement(label)
-    this.air.style.cssText += `height:${this.size.height}px;width:${this.size.width}px;`
+    this.air.style.cssText += `height:${this.size.height}px;
+                               width:${this.size.width}px;`
   }
 
   /**
@@ -50,7 +53,7 @@ class enemyAirObject extends Air {
     //参数初始化                
     this.creatDom('div')
     this.addClassN('enemyAir')
-    this.addFatherDom(enemyAirFather)
+    this.addFatherDom(config.enemyAirFather)
     this.addPosition()
     //添加进敌机列表
     enemyAirList.push(this)
@@ -86,7 +89,14 @@ class myAirObject extends Air {
                     width: myAirSize.width } )
     this.creatDom('div')
     this.addElementID('myAir')
-    this.addFatherDom(myAirFather)
+    this.addFatherDom(config.myAirFather)
     myAirList.push(this)
   }
 }
+
+const AirClass = {
+  enemyAirObject,
+  myAirObject
+}
+
+export default AirClass

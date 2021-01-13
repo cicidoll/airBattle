@@ -115,8 +115,8 @@ function throttle(func, wait, options) {
   }
 }
 
-const UnderScore = {
+const UnderScroce = {
   debounce,
   throttle
 }
-export default UnderScore
+export default UnderScroce

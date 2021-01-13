@@ -1,4 +1,6 @@
-import config from '../../initSetting/Config.js'
+import config from '../../InitSetting/Config.js'
+import AirObject from '../../Object/AirObject.js'
+import myAirMove from '../MoveControl/myAirMove.js'
 
 /**
  * 批量创建敌机对象
@@ -23,15 +25,15 @@ function lotOfCreateEnemyAir(airNum, life){
 function createAir(isMy, life){
   let myAir
   if (isMy) {
-    myAir = new myAirObject(life)
+    myAir = new AirObject.myAirObject(life)
   } else if (!isMy) {
-    myAir = new enemyAirObject(life)
+    myAir = new AirObject.enemyAirObject(life)
   }
   return myAir
 }
 
 /**
- * 敌机移动动画设置
+ * 敌机移动动画批量设置
  */
 function enemyAirListMove(){
   // 使用立即执行函数封装
@@ -73,11 +75,20 @@ function DelMyAir(myAir) {
  * 初始化我方战机
  */
 function myAirControl() {
-  //初始化游戏各类参数
-  myAirLife = 5//设置我方战机生命值
-  //创建对象
-  myAir = createAir(isMy=true, myAirLife)//创建我方战机，生命值为myAirLife
-  myAirDom = myAir.air//定义节点
-  //执行对象具体行为
-  myAirMoveBus()//启动我方战机移动控制总线
+  // 初始化游戏各类参数
+  // 创建我方战机，生命值为myAirLife
+  myAir = createAir(isMy=true, config.myAirLife)
+  // 定义节点
+  myAirDom = myAir.air
+  // 执行对象具体行为
+  // 启动我方战机移动控制总线
+  myAirMove.myAirMoveBus()
+}
+
+export default {
+  lotOfCreateEnemyAir,
+  enemyAirListMove,
+  DelEnemyAir,
+  DelMyAir,
+  myAirControl
 }

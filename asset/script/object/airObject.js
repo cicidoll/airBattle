@@ -88,7 +88,7 @@ class myAirObject extends Air {
     super( life, {  height: myAirSize.height, 
                     width: myAirSize.width } )
     this.creatDom('div')
-    this.addElementID('myAir')
+    this.addElementID(config.myAirId)
     this.addFatherDom(config.myAirFather)
     myAirList.push(this)
   }

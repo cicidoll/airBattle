@@ -43,7 +43,6 @@
       enemyAirBulletSizeSelect,  
       myAirBulletMoveTime,  
       enemyAirBulletMoveTime  
-  
 ### 2.DefaultMethods.js文件：  
 #### （1）文件描述：  
     存放项目初始化时，需要的默认function函数：  
@@ -56,7 +55,6 @@
     getRndInteger,  
     setHeightBus,  
     unitConversion  
-  
 ### 3.UnderScore.js文件  
 #### （1）文件描述：  
     防抖与节流函数。  
@@ -68,4 +66,6 @@
 
 ## 三、Control文件夹  
 ### 1.BattleControl文件夹  
-#### (1)
+#### (1)AirBattle.js文件：
+##### ①文件描述：  
+功能：批量创建敌机对象；敌机移动动画批量设置；批量删除生命值为0的敌机

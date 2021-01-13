@@ -16,9 +16,10 @@ const AirFatherID = 'battle'
 // 生成敌机对象的DOM父节点
 const enemyAirFather = document.getElementById(enemyAirFatherID)
 
+const myAirId = 'myAir'
 // 生成我方战机对象的DOM父节点
-// 生成战机子弹对象的DOM父节点
 const myAirFather = document.getElementById(AirFatherID)
+// 生成战机子弹对象的DOM父节点
 const bulletFather = document.getElementById(AirFatherID)
 
 
@@ -92,7 +93,7 @@ export default {
   myAirBulletSpeed,
   enemyAirBulletSpeed, enemyAirNumber, enemyAirLife,
   enemyAirBulletAttack,
-  enemyAirFatherID, AirFatherID,
+  myAirId, enemyAirFatherID, AirFatherID,
   enemyAirFather, myAirFather, bulletFather,
   enemyAirMaxTop,
   enemyAirMaxLeft,

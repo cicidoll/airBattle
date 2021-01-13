@@ -1,32 +1,32 @@
+import config from '../../InitSetting/Config.js'
+import DefaultMethods from '../../InitSetting/DefaultMethods.js'
 /**
  * 我方战机移动-总线函数
  * diffX、diffY，指代的是触摸点与我方战机所代表的正方体左上顶点的相对距离，
  * 即触摸点的坐标减去左上顶点的坐标。
  */
-function myAirMoveBus(){
+function myAirMoveBus() {
   // 记录初次点击的坐标值
   let diffX, diffY
   // 我方战机移动Touch事件监听
-  const dom = document.getElementById('myAir')
+  const dom = document.getElementById(config.myAirId)
   dom.addEventListener('touchstart',touch, false)
   dom.addEventListener('touchmove',touch, false)
 
   function touch(event) {
     const ElementTopLeft
-    // 定义需要移动的元素ID
-    const elementID = 'myAir'
     // 触摸事件分支器
     switch (event.type) {
       case 'touchstart':
         /* 获取元素，计算元素top和left的像素 */
-        const element = document.getElementById(elementID)
+        const element = document.getElementById(config.myAirId)
         ElementTopLeft = calculationElementTopLeft(element)
 
         diffY = event.touches[0].clientY - ElementTopLeft[0]
         diffX = event.touches[0].clientX - ElementTopLeft[1]
         break;
       case 'touchmove':
-        defaultTouchMove(event,elementID,diffX,diffY)
+        defaultTouchMove(event, config.myAirId, diffX, diffY)
         break
     }
   }
@@ -49,11 +49,11 @@ function defaultTouchMove (event, elementID, diffX, diffY) {
   let left = elementStyle.left = event.touches[0].clientX - diffX + 'px'
 
   /*控制元素移动不超越边界 */
-  const topNum = Number(top.substring(0, top.length - 2 ) )
-  const leftNum = Number(left.substring(0, left.length - 2 ) )
+  const topNum = Number(top.substring(0, top.length - 2) )
+  const leftNum = Number(left.substring(0, left.length - 2) )
   if ( topNum < 0 ){
     top = '0px'
-  } else if ( topNum > ( windowHeight - ElementMidPoint[1]*2 ) ) {
+  } else if ( topNum > (windowHeight - ElementMidPoint[1]*2) ) {
     top = windowHeight - ElementMidPoint[1]*2 + 'px';
   }
   if ( leftNum < 0 ) {
@@ -75,11 +75,11 @@ function calculationElementMid(element) {
   const width = style.width
   // 统一将其转化为Number类型、以px为单位的数组。
   // 计算高度像素
-  const heightpx = unitConversion(height)
+  const heightpx = DefaultMethods.unitConversion(height)
   // 计算宽度像素
-  const widthpx = unitConversion(width)
+  const widthpx = DefaultMethods.unitConversion(width)
   // 元素中点坐标
-  return [widthpx/2,heightpx/2]
+  return [widthpx/2, heightpx/2]
 }
 
 /**
@@ -93,8 +93,12 @@ function calculationElementTopLeft(element) {
   const left = Win.left
   //统一将其转化为Number类型、以px为单位的数组。
   // 计算top像素
-  const toppx = unitConversion(top)
+  const toppx = DefaultMethods.unitConversion(top)
   // 计算left像素
-  const leftpx = unitConversion(left)
+  const leftpx = DefaultMethods.unitConversion(left)
   return [toppx, leftpx]
+}
+
+export default {
+  myAirMoveBus
 }

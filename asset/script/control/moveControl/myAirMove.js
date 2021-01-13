@@ -100,5 +100,7 @@ function calculationElementTopLeft(element) {
 }
 
 export default {
-  myAirMoveBus
+  myAirMoveBus,
+  calculationElementMid,
+  calculationElementTopLeft
 }

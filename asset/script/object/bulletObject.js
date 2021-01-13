@@ -43,4 +43,6 @@ class Bullet {
   }
 }
 
-export default Bullet
+export default {
+  Bullet
+}

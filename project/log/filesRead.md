@@ -68,4 +68,42 @@
 ### 1.BattleControl文件夹  
 #### (1)AirBattle.js文件：
 ##### ①文件描述：  
-功能：批量创建敌机对象；敌机移动动画批量设置；批量删除生命值为0的敌机
+功能：批量创建敌机对象；敌机移动动画批量设置；批量删除生命值为0的敌机;我方战机流程控制,初始化我方战机  
+##### ②模块依赖：  
+###### （一）  
+../../InitSetting/Config.js中的enemyAirFather myAirFather myAirLife  
+###### （二）  
+../../Object/AirObject.js中的myAirObject enemyAirObject  
+###### （三） 
+../MoveControl/myAirMove.js中的myAirMoveBus  
+##### ③暴露参数：  
+  lotOfCreateEnemyAir,  
+  enemyAirListMove,  
+  DelEnemyAir,  
+  DelMyAir,  
+  myAirControl  
+#### (2)BulletBattle.js文件：
+##### ①文件描述：  
+
+##### ②模块依赖：  
+###### （一）  
+
+###### （二）  
+
+###### （三） 
+
+##### ③暴露参数：  
+### 2.MoveControl文件夹  
+#### (1)myAirMove.js文件：
+##### ①文件描述：  
+我方战机移动-总线函数  
+（同时对外暴露两个函数：获取元素宽高，计算元素中心点；获取元素，计算元素top和left的像素）  
+##### ②模块依赖：  
+###### （一）  
+../../InitSetting/Config.js中的myAirId  
+###### （二）  
+../../InitSetting/DefaultMethods.js中的unitConversion  
+##### ③暴露参数：  
+  myAirMoveBus,  
+  calculationElementMid,  
+  calculationElementTopLeft  

@@ -94,9 +94,7 @@ class myAirObject extends Air {
   }
 }
 
-const AirClass = {
+export default {
   enemyAirObject,
   myAirObject
 }
-
-export default AirClass

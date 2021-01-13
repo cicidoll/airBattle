@@ -9,6 +9,13 @@ const windowHeight = window.innerHeight ||
 const myAirSize = { height: 0.15 * windowWidth, 
                     width: 0.15 * windowWidth }
 
+// 生成敌机对象的DOM父节点
+const enemyAirFather = document.getElementById('newEnemyAirsArea')
+// 生成我方战机对象的DOM父节点
+const myAirFather = document.getElementById('battle')
+// 生成战机子弹对象的DOM父节点
+const bulletFather = document.getElementById('battle')
+
 // 我方战机生命值
 let myAirLife = 3
 
@@ -30,13 +37,6 @@ let enemyAirNumber
 let enemyAirLife
 // 敌方战机子弹攻击力
 let enemyAirBulletAttack
-
-// 生成敌机对象的DOM父节点
-const enemyAirFather = document.getElementById('newEnemyAirsArea')
-// 生成我方战机对象的DOM父节点
-const myAirFather = document.getElementById('battle')
-// 生成战机子弹对象的DOM父节点
-const bulletFather = document.getElementById('battle')
 
 // 敌机生成的随机最大高度
 let enemyAirMaxTop
@@ -60,7 +60,9 @@ let myAirBulletMoveTime = 5
 // 设置敌方子弹移动速度
 let enemyAirBulletMoveTime
 
-// 当前公式可能存在问题
+// 当前公式仅作代码测试用途，
+// 正式发布前，请认真考虑游戏强度并将其修改
+// write by 2021/1/13
 function gameModeSet() {
   //1.0版本：使用倍数决定具体参数之间的关联.
   const value = unitConversion(getRndInteger(5, 40)+'vw')//以敌机高度参数为基准
@@ -75,7 +77,7 @@ function gameModeSet() {
 }
 gameModeSet()
 
-const config = {
+export default {
   windowWidth, windowHeight,
   myAirSize, myAirLife,
   enemyAirSize,
@@ -94,5 +96,3 @@ const config = {
   myAirBulletMoveTime,
   enemyAirBulletMoveTime
 }
-
-export default config

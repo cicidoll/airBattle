@@ -9,12 +9,18 @@ const windowHeight = window.innerHeight ||
 const myAirSize = { height: 0.15 * windowWidth, 
                     width: 0.15 * windowWidth }
 
+// 生成敌机对象的DOM父节点ID
+const enemyAirFatherID = 'newEnemyAirsArea'
+// 生成战机对象的DOM父节点ID
+const AirFatherID = 'battle'
 // 生成敌机对象的DOM父节点
-const enemyAirFather = document.getElementById('newEnemyAirsArea')
+const enemyAirFather = document.getElementById(enemyAirFatherID)
+
 // 生成我方战机对象的DOM父节点
-const myAirFather = document.getElementById('battle')
 // 生成战机子弹对象的DOM父节点
-const bulletFather = document.getElementById('battle')
+const myAirFather = document.getElementById(AirFatherID)
+const bulletFather = document.getElementById(AirFatherID)
+
 
 // 我方战机生命值
 let myAirLife = 3
@@ -86,6 +92,7 @@ export default {
   myAirBulletSpeed,
   enemyAirBulletSpeed, enemyAirNumber, enemyAirLife,
   enemyAirBulletAttack,
+  enemyAirFatherID, AirFatherID,
   enemyAirFather, myAirFather, bulletFather,
   enemyAirMaxTop,
   enemyAirMaxLeft,

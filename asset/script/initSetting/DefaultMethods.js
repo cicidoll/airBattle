@@ -24,8 +24,8 @@ function setHeight(element,height) {
 function setHeightBus(){
   const height = config.windowHeight
   setHeight(document.getElementsByTagName('body')[0], height)
-  setHeight(document.getElementById('battle'), height)
-  setHeight(document.getElementById('newEnemyAirsArea'), 0.3 * height)
+  setHeight(document.getElementById(config.AirFatherID), height)
+  setHeight(document.getElementById(config.enemyAirFatherID), 0.3 * height)
 }
 
 /**
@@ -50,10 +50,8 @@ function unitConversion(string){
   return stringpx
 }
 
-const DefaultMethods = {
+export default {
   getRndInteger,
   setHeightBus,
   unitConversion
 }
-
-export default DefaultMethods

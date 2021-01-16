@@ -9,6 +9,8 @@ class GameModeConfig {
   constructor () {
     // 我方战机生命值
     this.myAirLife = 3
+    // 我方战机子弹攻击力
+    this.myAirBulletAttack = 1
     //生成敌机大小
     this.enemyAirSize = {}
     // 敌方战机子弹攻击力

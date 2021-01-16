@@ -6,11 +6,11 @@ import AirObject from '../../Object/AirObject.js'
  * @param {Number} airNum 需要生成的敌机对象数量
  * @param {Number} life 敌机的生命值
  */
-function lotOfCreateEnemyAir(life, list, enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime) {
+function lotOfCreateEnemyAir(airNum, life, list, size, enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime) {
   // 使用立即执行函数封装
   ( () => {
     for(let i =0; i<airNum; i++) {
-      new AirObject.enemyAirObject(life, list, 
+      new AirObject.enemyAirObject(life, list, size,
         enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime)
     }
   })()
@@ -22,9 +22,9 @@ function lotOfCreateEnemyAir(life, list, enemyAirMaxTop, enemyAirMaxLeft, enemyA
  */
 function enemyAirListMove (list) {
   // 使用立即执行函数封装
-  (list.forEach( air => {
+  list.forEach( air => {
     air.airMove()
-  }))()
+  })
 }
 
 /**

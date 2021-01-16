@@ -37,7 +37,7 @@ export default {
   myAirSize,
   enemyAirFatherID, AirFatherID,
   myAirId,
-  enemyAirFather,myAirFather,bulletFather,
-  fps,roundTime,
+  enemyAirFather, myAirFather, bulletFather,
+  fps, roundTime,
   bulletSize
 }

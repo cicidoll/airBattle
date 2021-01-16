@@ -1,4 +1,5 @@
 import config from '../initSetting/Config.js'
+import DefaultMethods from '../InitSetting/DefaultMethods.js'
 
 /**
  * 战机的原型对象
@@ -58,7 +59,7 @@ class enemyAirObject extends Air {
    * @param {Number} life 战机生命值
    * @param {Object} list 存放战机对象列表
    */
-  constructor (life, list, enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime) {
+  constructor (life, list, enemyAirSize, enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime) {
     super( life , { height: enemyAirSize.height,
                     width: enemyAirSize.width } )
     // 参数初始化
@@ -82,9 +83,9 @@ class enemyAirObject extends Air {
    */
   airMove () {
     let position = this.position
-    let newtop = getRndInteger( 
+    let newtop = DefaultMethods.getRndInteger( 
       -position.top, this.enemyAirMaxTop - position.top)
-    let newLeft = getRndInteger( 
+    let newLeft = DefaultMethods.getRndInteger( 
       -position.left, this.enemyAirMaxLeft - position.left)
     this.air.style.cssText += `transition:all ${this.enemyAirMoveTime}s ease 0s`
     this.air.style.cssText += `transform: translate(${newLeft}px,${newtop}px)`
@@ -96,8 +97,8 @@ class enemyAirObject extends Air {
    * @param {Number} enemyAirMaxLeft 敌机生成的随机最大宽度
    */
   addPosition () {
-    let top = getRndInteger(0, this.enemyAirMaxTop)
-    let left = getRndInteger(0, this.enemyAirMaxLeft)
+    let top = DefaultMethods.getRndInteger(0, this.enemyAirMaxTop)
+    let left = DefaultMethods.getRndInteger(0, this.enemyAirMaxLeft)
     this.position = { top:top, left:left }
     this.air.style.cssText += `top:${top}px; 
                               left:${left}px;`

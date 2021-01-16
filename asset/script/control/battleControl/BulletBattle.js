@@ -1,6 +1,6 @@
-import config from '../../InitSetting/Config'
+import config from '../../InitSetting/Config.js'
 import DefaultMethods from '../../InitSetting/DefaultMethods.js'
-import bulletObject from '../../Object/BulletObject'
+import bulletObject from '../../Object/BulletObject.js'
 
 // 我方战机子弹所属Class
 const myAirBulletClass = 'myAirBullet'
@@ -13,21 +13,22 @@ const enemyAirBulletClass = 'enemyAirBullet'
  * @param {Object} bulletAttack 需要设置子弹的攻击力
  * @returns {Object} 生成的子弹对象
  */
-function BulletPushList(AirDom, isMy, bulletAttack){
+function BulletPushList(AirDom, isMy, bulletAttack, bulletSize, sizeSelect, list) {
     let bullet
     if (isMy) {
       bullet = createAirBullet( AirDom, 
-                                config.bulletSize[config.myAirBulletSizeSelect], 
+                                bulletSize[sizeSelect], 
                                 isMy,
                                 bulletAttack)
       bullet.addClassN(myAirBulletClass)
-      myAirBulletList.push(bullet)
+      list.push(bullet)
     }else if (!isMy) {
       bullet = createAirBullet( AirDom, 
-                                bulletSize[enemyAirBulletSizeSelect], 
-                                isMy, bulletAttack)
+                                bulletSize[sizeSelect], 
+                                isMy,
+                                bulletAttack)
       bullet.addClassN(enemyAirBulletClass)
-      enemyAirBulletList.push(bullet)
+      list.push(bullet)
     }
     return bullet
 }
@@ -50,7 +51,7 @@ function createAirBullet(element, bulletSize, bulletClass=true, bulletAttack){
   
   let elementMid = DefaultMethods.calculationElementMid(element)
 
-  let bulletTop,bulletLeft
+  let bulletTop, bulletLeft
   if (bulletClass) {
     bulletTop = elementTopLeft[0]- bulletSize.height
     bulletLeft = elementTopLeft[1]+elementMid[1] - bulletSize.width/2
@@ -58,12 +59,13 @@ function createAirBullet(element, bulletSize, bulletClass=true, bulletAttack){
     bulletTop = elementTopLeft[0] + bulletSize.height;
     bulletLeft = elementTopLeft[1] + elementMid[1] - bulletSize.width/2
   }
-  let position = {top:bulletTop, left:bulletLeft }
+  let position = {top:bulletTop,
+                  left:bulletLeft}
 
-  let airBullet = new bulletObject.Bullet(bulletSize, attack = bulletAttack, position)
+  let airBullet = new bulletObject.Bullet(bulletSize, bulletAttack, position)
   airBullet.creatDom('div')
 
-  airBullet.addFatherDom(bulletFather)
+  airBullet.addFatherDom(config.bulletFather)
   airBullet.addClassN('bullet')
   airBullet.addPosition()
   return airBullet
@@ -73,15 +75,18 @@ function createAirBullet(element, bulletSize, bulletClass=true, bulletAttack){
  * 为子弹DOM节点添加移动动画
  * @param {Object} bullet 需要添加动画的子弹对象
  * @param {Boolean} isMy true:我方战机子弹节点；flase：敌方战机子弹节点
+ * @param {Number} moveTime 子弹移动时间
+ * @param {*} windowHeight 屏幕高度
  */
-function airBulletMove(bullet,isMy){
+function airBulletMove(bullet, isMy, moveTime, windowHeight = 0){
     if (isMy) {
       // 为我方战机子弹节点添加移动动画
-      bullet.bullet.style.cssText += `transition:all ${myAirBulletMoveTime}s ease` 
-                                  += `transform: translateY(${-bullet.position.top-bullet.size.height}px)`
-    } else if (!isMy) {//为敌方战机子弹节点添加移动动画
-      bullet.bullet.style.cssText += `transition:all ${enemyAirBulletMoveTime}s ease` 
-                                  += `transform: translateY(${windowHeight}px)`
+      bullet.bullet.style.cssText += `transition:all ${moveTime}s ease` 
+      bullet.bullet.style.cssText += `transform: translateY(${-bullet.position.top-bullet.size.height}px)`
+    } else if (!isMy) {
+      // 为敌方战机子弹节点添加移动动画
+      bullet.bullet.style.cssText += `transition:all ${moveTime}s ease` 
+      bullet.bullet.style.cssText += `transform: translateY(${windowHeight}px)`
       // 让子弹溢出屏幕底部
     }
 }
@@ -108,8 +113,8 @@ function delAirBullet(BulletFather, bullet, airBulletList, index) {
  * @param {Array} airList 战机对象列表
  * @param {Object} BulletFather 子弹的父DOM节点
  */
-function calculationBulletAndAir(bulletList,airList,BulletFather) {
-  if ((bulletList.length == 0) || (airList.length == 0) ) return;
+function calculationBulletAndAir(bulletList, airList, BulletFather) {
+  if ( (bulletList.length == 0) || (airList.length == 0) ) return
   let airListForEach,bulletListForEach;
   //calculationElementMid(element)获取元素宽高，计算元素中心点
   //getBoundingClientRect()方法返回元素的大小及其相对于视口的位置。
@@ -123,7 +128,7 @@ function calculationBulletAndAir(bulletList,airList,BulletFather) {
                             ]
                         ]
     
-    bulletListForEach = bulletList.forEach( (bullet,bulletIndex) => {
+    bulletListForEach = bulletList.forEach( (bullet, bulletIndex) => {
       let bulletTempWidthHeight = [ bullet.size.width, bullet.size.height ]
       let bulletCoordinate =  [   [ bullet.bullet.getBoundingClientRect().x , 
                                     bullet.bullet.getBoundingClientRect().x + bulletTempWidthHeight[0] 
@@ -143,7 +148,7 @@ function calculationBulletAndAir(bulletList,airList,BulletFather) {
                   ( airCoordinate[0][0] <= bulletCoordinate[0][0] ) &&
                   ( bulletCoordinate[0][0] <  airCoordinate[0][1] )
               )
-          ){
+          ) {
             air.life -= bullet.attack
             // 删除子弹
             delAirBullet(BulletFather, bullet, bulletList, bulletIndex)
@@ -158,4 +163,10 @@ function calculationEnemyBulletTopLeft(element) {
     // getBoundingClientRect()方法返回元素的大小及其相对于视口的位置。
     return [ element.getBoundingClientRect().y,
              element.getBoundingClientRect().x ]
+}
+
+export default {
+  BulletPushList,
+  airBulletMove,
+  calculationBulletAndAir
 }

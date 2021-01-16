@@ -57,20 +57,17 @@ class enemyAirObject extends Air {
    * 
    * @param {Number} life 战机生命值
    * @param {Object} list 存放战机对象列表
-   * @param {Number} enemyAirMaxTop 敌机生成的随机最大高度
-   * @param {Number} enemyAirMaxLeft 敌机生成的随机最大宽度
-   * @param {Number} enemyAirMoveTime 敌方战机移动动画时间
    */
   constructor (life, list, enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime) {
     super( life , { height: enemyAirSize.height,
                     width: enemyAirSize.width } )
     // 参数初始化
-    this.enemyAirMaxTop = enemyAirMaxTop
-    this.enemyAirMaxLeft = enemyAirMaxLeft
-    this.enemyAirMoveTime = enemyAirMoveTime
     this.creatDom('div')
     this.addClassN('enemyAir')
     this.addFatherDom(config.enemyAirFather)
+    this.enemyAirMaxTop = enemyAirMaxTop
+    this.enemyAirMaxLeft = enemyAirMaxLeft
+    this.enemyAirMoveTime = enemyAirMoveTime
     this.addPosition()
     // 添加进敌机列表
     list.push(this)
@@ -89,8 +86,8 @@ class enemyAirObject extends Air {
       -position.top, this.enemyAirMaxTop - position.top)
     let newLeft = getRndInteger( 
       -position.left, this.enemyAirMaxLeft - position.left)
-    this.air.style.cssText += `transition:all ${this.enemyAirMoveTime}s ease 0s` 
-                           += `transform: translate(${newLeft}px,${newtop}px)`
+    this.air.style.cssText += `transition:all ${this.enemyAirMoveTime}s ease 0s`
+    this.air.style.cssText += `transform: translate(${newLeft}px,${newtop}px)`
   }
 
   /**

@@ -1,5 +1,5 @@
 import config from '../../InitSetting/Config'
-import myAirMove from '../MoveControl/myAirMove'
+import DefaultMethods from '../../InitSetting/DefaultMethods.js'
 import bulletObject from '../../Object/BulletObject'
 
 // 我方战机子弹所属Class
@@ -43,12 +43,12 @@ function BulletPushList(AirDom, isMy, bulletAttack){
 function createAirBullet(element, bulletSize, bulletClass=true, bulletAttack){
   let elementTopLeft
   if (bulletClass) {
-    elementTopLeft = myAirMove.calculationElementTopLeft(element)
+    elementTopLeft = DefaultMethods.calculationElementTopLeft(element)
   } else if (!bulletClass) {
-    elementTopLeft = myAirMove.calculationEnemyBulletTopLeft(element)
+    elementTopLeft = calculationEnemyBulletTopLeft(element)
   }
   
-  let elementMid = myAirMove.calculationElementMid(element)
+  let elementMid = DefaultMethods.calculationElementMid(element)
 
   let bulletTop,bulletLeft
   if (bulletClass) {
@@ -114,7 +114,7 @@ function calculationBulletAndAir(bulletList,airList,BulletFather) {
   //calculationElementMid(element)获取元素宽高，计算元素中心点
   //getBoundingClientRect()方法返回元素的大小及其相对于视口的位置。
   airListForEach = airList.forEach( (air) =>{
-    let airTempMid = myAirMove.calculationElementMid(air.air)
+    let airTempMid = DefaultMethods.calculationElementMid(air.air)
     let airCoordinate = [   [ air.air.getBoundingClientRect().x ,
                               air.air.getBoundingClientRect().x + airTempMid[0]*2
                             ] ,

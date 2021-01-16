@@ -14,19 +14,18 @@ function myAirMoveBus() {
   dom.addEventListener('touchmove',touch, false)
 
   function touch(event) {
-    const ElementTopLeft
+    let ElementTopLeft
     // 触摸事件分支器
     switch (event.type) {
       case 'touchstart':
         /* 获取元素，计算元素top和left的像素 */
-        const element = document.getElementById(config.myAirId)
-        ElementTopLeft = DefaultMethods.calculationElementTopLeft(element)
+        ElementTopLeft = DefaultMethods.calculationElementTopLeft(dom)
 
         diffY = event.touches[0].clientY - ElementTopLeft[0]
         diffX = event.touches[0].clientX - ElementTopLeft[1]
         break;
       case 'touchmove':
-        defaultTouchMove(event, config.myAirId, diffX, diffY)
+        defaultTouchMove(event,dom, config.myAirId, diffX, diffY)
         break
     }
   }
@@ -39,7 +38,7 @@ function myAirMoveBus() {
  * @param {Number} diffX 指代的是触摸点与我方战机所代表的正方体左上顶点的相对距离，即触摸点的坐标减去左上顶点的坐标。
  * @param {Number} diffY 同上
  */
-function defaultTouchMove (event, elementID, diffX, diffY) {
+function defaultTouchMove (event,element, elementID, diffX, diffY) {
   let elementStyle = document.getElementById(elementID).style
   /* 获取元素宽高，计算元素中心点 */
   const ElementMidPoint = DefaultMethods.calculationElementMid(element)
@@ -53,13 +52,13 @@ function defaultTouchMove (event, elementID, diffX, diffY) {
   const leftNum = Number(left.substring(0, left.length - 2) )
   if ( topNum < 0 ){
     top = '0px'
-  } else if ( topNum > (windowHeight - ElementMidPoint[1]*2) ) {
-    top = windowHeight - ElementMidPoint[1]*2 + 'px';
+  } else if ( topNum > (config.windowHeight - ElementMidPoint[1]*2) ) {
+    top = config.windowHeight - ElementMidPoint[1]*2 + 'px';
   }
   if ( leftNum < 0 ) {
     left = '0px'
-  } else if ( leftNum > (windowWidth - ElementMidPoint[0]*2) ) {
-    left = windowWidth - ElementMidPoint[0]*2 + 'px'
+  } else if ( leftNum > (config.windowWidth - ElementMidPoint[0]*2) ) {
+    left = config.windowWidth - ElementMidPoint[0]*2 + 'px'
   }
 }
 

@@ -1,9 +1,13 @@
 class Bullet {
-  constructor(size, attack = 3, position={} ){
-    this.size = size// 子弹模型的大小，以px为单位
-    this.attack = attack// 子弹的威力，默认为3
-    this.bullet = {}// 存放生成的DOM节点对象
-    this.position = position// 默认生成的初始位置
+  constructor (size, attack = 3, position={} ) {
+    // 子弹模型的大小，以px为单位
+    this.size = size
+    // 子弹的威力，默认为3
+    this.attack = attack
+    // 存放生成的DOM节点对象
+    this.bullet = {}
+    // 默认生成的初始位置
+    this.position = position
   }
   /**
    * @param {String} label 定义生成节点的标签名
@@ -26,7 +30,7 @@ class Bullet {
    * @param {String} ElementID 定义需要添加的ID名 
    */
   addElementID (ElementID) {
-    this.bullet.setAttribute('id',ElementID)
+    this.bullet.setAttribute('id', ElementID)
   }
 
   /**

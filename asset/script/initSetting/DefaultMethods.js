@@ -1,7 +1,7 @@
 import config from './Config.js'
 
 /**
- * 输入两个数字，返回包括min和包括max之间的一个随机数
+ * 输入两个数字，返回包括min和包括max之间的一个随机整数
  * @param {Number} min 
  * @param {Number} max 
  */
@@ -21,7 +21,7 @@ function setHeight(element,height) {
 /**
  * 批量为DOM节点设置自适应高度
  */
-function setHeightBus(){
+function setHeightBus() {
   const height = config.windowHeight
   setHeight(document.getElementsByTagName('body')[0], height)
   setHeight(document.getElementById(config.AirFatherID), height)
@@ -50,8 +50,45 @@ function unitConversion(string){
   return stringpx
 }
 
+/**
+ * 获取元素宽高，计算元素中心点
+ * @param {Object} element 需要计算的DOM节点
+ * @returns {Array} [widthpx/2,heightpx/2] 元素中点坐标
+ */
+function calculationElementMid(element) {
+  const style = element.style
+  const height = style.height
+  const width = style.width
+  // 统一将其转化为Number类型、以px为单位的数组。
+  // 计算高度像素
+  const heightpx = unitConversion(height)
+  // 计算宽度像素
+  const widthpx = unitConversion(width)
+  // 元素中点坐标
+  return [widthpx/2, heightpx/2]
+}
+
+/**
+ * 获取元素，计算元素top和left的像素
+ * @param {Object} element 需要计算的DOM节点
+ * @returns {Array} [toppx,leftpx]
+ */
+function calculationElementTopLeft(element) {
+  const Win = window.getComputedStyle(element, null)
+  const top = Win.top
+  const left = Win.left
+  //统一将其转化为Number类型、以px为单位的数组。
+  // 计算top像素
+  const toppx = unitConversion(top)
+  // 计算left像素
+  const leftpx = unitConversion(left)
+  return [toppx, leftpx]
+}
+
 export default {
   getRndInteger,
   setHeightBus,
-  unitConversion
+  unitConversion,
+  calculationElementMid,
+  calculationElementTopLeft
 }

@@ -20,7 +20,7 @@ function myAirMoveBus() {
       case 'touchstart':
         /* 获取元素，计算元素top和left的像素 */
         const element = document.getElementById(config.myAirId)
-        ElementTopLeft = calculationElementTopLeft(element)
+        ElementTopLeft = DefaultMethods.calculationElementTopLeft(element)
 
         diffY = event.touches[0].clientY - ElementTopLeft[0]
         diffX = event.touches[0].clientX - ElementTopLeft[1]
@@ -42,7 +42,7 @@ function myAirMoveBus() {
 function defaultTouchMove (event, elementID, diffX, diffY) {
   let elementStyle = document.getElementById(elementID).style
   /* 获取元素宽高，计算元素中心点 */
-  const ElementMidPoint = calculationElementMid(element)
+  const ElementMidPoint = DefaultMethods.calculationElementMid(element)
 
   /* 定义touch事件移动函数 */
   let top = elementStyle.top =  event.touches[0].clientY - diffY + 'px'
@@ -63,44 +63,6 @@ function defaultTouchMove (event, elementID, diffX, diffY) {
   }
 }
 
-
-/**
- * 获取元素宽高，计算元素中心点
- * @param {Object} element 需要计算的DOM节点
- * @returns {Array} [widthpx/2,heightpx/2] 元素中点坐标
- */
-function calculationElementMid(element) {
-  const style = element.style
-  const height = style.height
-  const width = style.width
-  // 统一将其转化为Number类型、以px为单位的数组。
-  // 计算高度像素
-  const heightpx = DefaultMethods.unitConversion(height)
-  // 计算宽度像素
-  const widthpx = DefaultMethods.unitConversion(width)
-  // 元素中点坐标
-  return [widthpx/2, heightpx/2]
-}
-
-/**
- * 获取元素，计算元素top和left的像素
- * @param {Object} element 需要计算的DOM节点
- * @returns {Array} [toppx,leftpx]
- */
-function calculationElementTopLeft(element) {
-  const Win = window.getComputedStyle(element,null)
-  const top = Win.top
-  const left = Win.left
-  //统一将其转化为Number类型、以px为单位的数组。
-  // 计算top像素
-  const toppx = DefaultMethods.unitConversion(top)
-  // 计算left像素
-  const leftpx = DefaultMethods.unitConversion(left)
-  return [toppx, leftpx]
-}
-
 export default {
-  myAirMoveBus,
-  calculationElementMid,
-  calculationElementTopLeft
+  myAirMoveBus
 }

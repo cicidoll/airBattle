@@ -2,59 +2,67 @@ import config from '../../InitSetting/Config.js'
 import AirObject from '../../Object/AirObject.js'
 import myAirMove from '../MoveControl/myAirMove.js'
 
-/**
- * 批量创建敌机对象
- * @param {Number} airNum 需要生成的敌机对象数量
- * @param {Number} life 敌机的生命值
- */
-function lotOfCreateEnemyAir(airNum, life){
-  // 使用立即执行函数封装
-  ( () => {
-    for(let i =0; i<airNum; i++) {
-      createAir(isMy=false, life)
+class enemyAirBattle{
+  constructor () {
+
+  }
+  /**
+   * 批量创建敌机对象
+   * @param {Number} airNum 需要生成的敌机对象数量
+   * @param {Number} life 敌机的生命值
+   */
+  lotOfCreateEnemyAir(life, list, enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime) {
+    // 使用立即执行函数封装
+    ( () => {
+      for(let i =0; i<airNum; i++) {
+        createEnemyAir(life, list, enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime)
+      }
+    })()
+  }
+
+
+  createEnemyAir (life, list, enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime) {
+    let myAir
+    myAir = new AirObject.enemyAirObject(life, list, 
+      enemyAirMaxTop, enemyAirMaxLeft, enemyAirMoveTime)
+    return myAir
+  }
+  /**
+   * 敌机移动动画批量设置
+   */
+  enemyAirListMove () {
+    // 使用立即执行函数封装
+    (enemyAirList.forEach( air => {
+      air.airMove()
+    }))()
+  }
+
+  /**
+   * 负责遍历敌机List，将生命值Life为0的对象置空
+   * @param {Object} air Dom节点，需要删除的战机对象节点
+   * @param {Number} index Dom节点在enemyAirList列表中的索引（可以使用Foreach传入的index进行操作）
+   */
+  DelEnemyAir(air, index) {
+    if (air.life <= 0) {
+      config.enemyAirFather.removeChild(air.air)
+      enemyAirList.splice(index,1)
+      // 战机对象置空
+      air = null
     }
-  })()
-}
-
-/**
- * 创建战机对象,取默认大小值。
- * @param {Boolean} isMy true:我方战机；false:敌方战机
- * @param {Number} life 战机生命值
- * @returns {Object} myAir 返回的是创建后的战机对象
- */
-function createAir(isMy, life){
-  let myAir
-  if (isMy) {
-    myAir = new AirObject.myAirObject(life)
-  } else if (!isMy) {
-    myAir = new AirObject.enemyAirObject(life)
-  }
-  return myAir
-}
-
-/**
- * 敌机移动动画批量设置
- */
-function enemyAirListMove(){
-  // 使用立即执行函数封装
-  (enemyAirList.forEach( air => {
-    air.airMove()
-  }))()
-}
-
-/**
- * 负责遍历敌机List，将生命值Life为0的对象置空
- * @param {Object} air Dom节点，需要删除的战机对象节点
- * @param {Number} index Dom节点在enemyAirList列表中的索引（可以使用Foreach传入的index进行操作）
- */
-function DelEnemyAir(air, index) {
-  if (air.life <= 0) {
-    config.enemyAirFather.removeChild(air.air)
-    enemyAirList.splice(index,1)
-    // 战机对象置空
-    air = null
   }
 }
+
+  /**
+   * 创建战机对象,取默认大小值。
+   * @param {Boolean} isMy true:我方战机；false:敌方战机
+   * @param {Number} life 战机生命值
+   * @returns {Object} myAir 返回的是创建后的战机对象
+   */
+  function createMyAir(life, list) {
+    let myAir
+    myAir = new AirObject.myAirObject(life, list)
+    return myAir
+  }
 
 /**
  * 当我方战机生命值为0时，将其删除。
@@ -77,7 +85,7 @@ function DelMyAir(myAir) {
 function myAirControl() {
   // 初始化游戏各类参数
   // 创建我方战机，生命值为myAirLife
-  myAir = createAir(isMy=true, config.myAirLife)
+  myAir = createAir(config.myAirLife)
   // 定义节点
   myAirDom = myAir.air
   // 执行对象具体行为

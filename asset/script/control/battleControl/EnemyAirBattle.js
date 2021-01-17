@@ -35,9 +35,9 @@ function enemyAirListMove (list) {
 function DelEnemyAir(air, index, list) {
   if (air.life <= 0) {
     config.enemyAirFather.removeChild(air.air)
-    list.splice(index,1)
     // 战机对象置空
-    air = null
+    air = null    
+    list.splice(index, 1)
   }
 }
 

@@ -53,14 +53,14 @@ function createAirBullet(element, bulletSize, bulletClass=true, bulletAttack){
 
   let bulletTop, bulletLeft
   if (bulletClass) {
-    bulletTop = elementTopLeft[0]- bulletSize.height
-    bulletLeft = elementTopLeft[1]+elementMid[1] - bulletSize.width/2
+    bulletTop = elementTopLeft[0] - bulletSize.height
+    bulletLeft = elementTopLeft[1] + elementMid[1] - bulletSize.width/2
   } else if (!bulletClass) {
-    bulletTop = elementTopLeft[0] + bulletSize.height;
+    bulletTop = elementTopLeft[0] + bulletSize.height
     bulletLeft = elementTopLeft[1] + elementMid[1] - bulletSize.width/2
   }
-  let position = {top:bulletTop,
-                  left:bulletLeft}
+  let position = { top: bulletTop,
+                   left: bulletLeft }
 
   let airBullet = new bulletObject.Bullet(bulletSize, bulletAttack, position)
   airBullet.creatDom('div')
@@ -82,7 +82,7 @@ function airBulletMove(bullet, isMy, moveTime, windowHeight = 0){
     if (isMy) {
       // 为我方战机子弹节点添加移动动画
       bullet.bullet.style.cssText += `transition:all ${moveTime}s ease` 
-      bullet.bullet.style.cssText += `transform: translateY(${-bullet.position.top-bullet.size.height}px)`
+      bullet.bullet.style.cssText += `transform: translateY(${ -bullet.position.top - bullet.size.height}px)`
     } else if (!isMy) {
       // 为敌方战机子弹节点添加移动动画
       bullet.bullet.style.cssText += `transition:all ${moveTime}s ease` 
@@ -101,7 +101,7 @@ function airBulletMove(bullet, isMy, moveTime, windowHeight = 0){
 function delAirBullet(BulletFather, bullet, airBulletList, index) {
   try {
     BulletFather.removeChild(bullet.bullet)
-    airBulletList.splice(index,1)
+    airBulletList.splice(index, 1)
     // 子弹置空
     bullet = null
   } catch (error) {}
@@ -115,10 +115,9 @@ function delAirBullet(BulletFather, bullet, airBulletList, index) {
  */
 function calculationBulletAndAir(bulletList, airList, BulletFather) {
   if ( (bulletList.length == 0) || (airList.length == 0) ) return
-  let airListForEach,bulletListForEach;
-  //calculationElementMid(element)获取元素宽高，计算元素中心点
-  //getBoundingClientRect()方法返回元素的大小及其相对于视口的位置。
-  airListForEach = airList.forEach( (air) =>{
+  // calculationElementMid(element)获取元素宽高，计算元素中心点
+  // getBoundingClientRect()方法返回元素的大小及其相对于视口的位置。
+  airList.forEach( air =>{
     let airTempMid = DefaultMethods.calculationElementMid(air.air)
     let airCoordinate = [   [ air.air.getBoundingClientRect().x ,
                               air.air.getBoundingClientRect().x + airTempMid[0]*2
@@ -128,7 +127,7 @@ function calculationBulletAndAir(bulletList, airList, BulletFather) {
                             ]
                         ]
     
-    bulletListForEach = bulletList.forEach( (bullet, bulletIndex) => {
+    bulletList.forEach( (bullet, bulletIndex) => {
       let bulletTempWidthHeight = [ bullet.size.width, bullet.size.height ]
       let bulletCoordinate =  [   [ bullet.bullet.getBoundingClientRect().x , 
                                     bullet.bullet.getBoundingClientRect().x + bulletTempWidthHeight[0] 
@@ -154,9 +153,7 @@ function calculationBulletAndAir(bulletList, airList, BulletFather) {
             delAirBullet(BulletFather, bullet, bulletList, bulletIndex)
           }
     })
-    bulletListForEach = null
   })
-  airListForEach = null
 }
 
 function calculationEnemyBulletTopLeft(element) {

@@ -25,7 +25,7 @@ const bulletFather = document.getElementById(AirFatherID)
 // 游戏刷新率
 const fps = 60
 // 设置关卡回合刷新时间
-const roundTime = 6
+const roundTime = 10
 // 设置子弹的大小，三种难度，由小到大。
 const bulletSize = 
   [ { height:30, width:10 },

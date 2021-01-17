@@ -20,6 +20,8 @@ let myAirBulletList = []
 let enemyAirBulletList = []
 // 敌方战机子弹监听事件移除列表
 let enemyAirBulletRemoveEventListenerList = []
+// 我方战机子弹监听事件移除列表
+let myAirBulletRemoveEventListenerList = []
 
 //主线程
 window.onload = () => {
@@ -41,9 +43,13 @@ window.onload = () => {
     /*****************************************************************/
     //游戏初始化，首次创建敌方战机对象
     // 批量创建敌机对象，使用GameModeConfig中参数
-    EnemyAirBattle.lotOfCreateEnemyAir( GameModeConfig.enemyAirNumber, GameModeConfig.enemyAirLife, enemyAirList,
-                                        GameModeConfig.enemyAirSize,GameModeConfig.enemyAirMaxTop, 
-                                        GameModeConfig.enemyAirMaxLeft, GameModeConfig.enemyAirMoveTime)
+    EnemyAirBattle.lotOfCreateEnemyAir( GameModeConfig.enemyAirNumber,
+                                        GameModeConfig.enemyAirLife,
+                                        enemyAirList,
+                                        GameModeConfig.enemyAirSize,
+                                        GameModeConfig.enemyAirMaxTop,
+                                        GameModeConfig.enemyAirMaxLeft,
+                                        GameModeConfig.enemyAirMoveTime)
     // 敌方战机移动延时器1
     let enemyAirMoveTimeOut1
     enemyAirMoveTimeOut1 = setTimeout( () => {
@@ -65,7 +71,8 @@ window.onload = () => {
     let enemyAirMoveTimeOut2
     // 定时器总线控制
     let setIntervalBus
-    let clearTempListTimeOut
+    let clearTempEnemyListTimeOut
+    let clearTempMyListTimeOut
     // 第二帧开始，负责每一帧执行循环的定时器总线
     setIntervalBus = setInterval( () => {
       /*****************************************************************/
@@ -73,10 +80,14 @@ window.onload = () => {
       // 当定时器不存在时，创建一个新的定时器
       if (!enemyAirTimeSetInterval) {
         enemyAirTimeSetInterval = setInterval( () => {
-          //批量创建敌机对象
-          EnemyAirBattle.lotOfCreateEnemyAir( GameModeConfig.enemyAirNumber, GameModeConfig.enemyAirLife, enemyAirList,
-                                              GameModeConfig.enemyAirSize,GameModeConfig.enemyAirMaxTop, 
-                                              GameModeConfig.enemyAirMaxLeft, GameModeConfig.enemyAirMoveTime)
+          // 批量创建敌机对象
+          EnemyAirBattle.lotOfCreateEnemyAir( GameModeConfig.enemyAirNumber,
+                                              GameModeConfig.enemyAirLife,
+                                              enemyAirList,
+                                              GameModeConfig.enemyAirSize,
+                                              GameModeConfig.enemyAirMaxTop, 
+                                              GameModeConfig.enemyAirMaxLeft,
+                                              GameModeConfig.enemyAirMoveTime)
           clearInterval(enemyAirTimeSetInterval)
           enemyAirTimeSetInterval = null
         }, config.roundTime*1000)
@@ -94,60 +105,66 @@ window.onload = () => {
       /*****************************************************************/
       // 敌方战机子弹定时器
       // 当定时器不存在时，创建一个新的定时器
-      if (!enemyAirBulletTime){
+      if (!enemyAirBulletTime) {
         // 生成的敌方子弹对象
         let enemyAirBullet
         //敌方战机子弹生成定时器
         enemyAirBulletTime = setInterval( () => {
           /*****************************************************************/
-          let enemyAirForeach
-          enemyAirForeach = enemyAirList.forEach( enemyAir => {
+          enemyAirList.forEach( enemyAir => {
             // 开始创建子弹对象
-            enemyAirBullet = BulletBattle.BulletPushList(enemyAir.air, false, GameModeConfig.enemyAirBulletAttack, 
-                                            config.bulletSize, GameModeConfig.enemyAirBulletSizeSelect, enemyAirBulletList)
+            enemyAirBullet = BulletBattle.BulletPushList( enemyAir.air,
+                                                          false,
+                                                          GameModeConfig.enemyAirBulletAttack,
+                                                          config.bulletSize,
+                                                          GameModeConfig.enemyAirBulletSizeSelect,
+                                                          enemyAirBulletList)
             /*****************************************************************/
-            //定义子弹节点添加动画结束后的节点删除事件
-            function transitionend() {
-              try {config.bulletFather.removeChild(enemyAirBullet.bullet)} catch (error) {}
+            // 定义子弹节点添加动画结束后的节点删除事件
+            function transitionend () {
+              try {
+                config.bulletFather.removeChild(enemyAirBullet.bullet)
+              } catch (error) {}
             }
 
-            let bulletAddEventListener
-            bulletAddEventListener = enemyAirBullet.bullet.addEventListener('transitionend',transitionend)
-            bulletAddEventListener = null
+            enemyAirBullet.bullet.addEventListener('transitionend', transitionend)
 
             let bulletRemoveEventListener = Symbol()
-            bulletRemoveEventListener = setTimeout( () =>{
+            bulletRemoveEventListener = setTimeout( () => {
               // 移除监听事件
-              enemyAirBullet.bullet.removeEventListener('transitionend',transitionend)
-              // 当子弹移动动画时长结束，3帧后移除监听事件
-            }, GameModeConfig.enemyAirBulletMoveTime*1000 + 3000/config.fps)
+              enemyAirBullet.bullet.removeEventListener('transitionend', transitionend)
+              clearTimeout(bulletRemoveEventListener)
+              bulletRemoveEventListener = null
+              // 当子弹移动动画时长结束，移除监听事件
+            }, GameModeConfig.enemyAirBulletMoveTime*1000)
             enemyAirBulletRemoveEventListenerList.push(bulletRemoveEventListener)
             /*****************************************************************/
           })
-          enemyAirForeach = null
           /*****************************************************************/
           // 创建敌方战机子弹移动延时器，延时3帧启动
           let airBulletMoveTimeout
           if (!airBulletMoveTimeout) {
             airBulletMoveTimeout = setTimeout( () => {
               enemyAirBulletList.forEach( bullet => {
-                BulletBattle.airBulletMove(bullet, false, GameModeConfig.enemyAirBulletMoveTime, config.windowHeight)
+                BulletBattle.airBulletMove( bullet, false,
+                                            GameModeConfig.enemyAirBulletMoveTime, 
+                                            config.windowHeight)
                 clearTimeout(airBulletMoveTimeout)
                 airBulletMoveTimeout = null
               })
-            },3000/config.fps)
+            }, 3000/config.fps)
           }
 
           // 创建临时列表清理延时器，清除监听事件已经结束的敌方子弹对象列表
-          if (!clearTempListTimeOut) {
-            clearTempListTimeOut = setTimeout( () => {
+          if (!clearTempEnemyListTimeOut) {
+            clearTempEnemyListTimeOut = setTimeout( () => {
               enemyAirBulletRemoveEventListenerList.forEach( (obj, index) => {
                 clearTimeout(obj)
-                obj = null
+                enemyAirBulletRemoveEventListenerList[index] = null
                 enemyAirBulletRemoveEventListenerList.splice(index, 1)
               })
-              clearTimeout(clearTempListTimeOut)
-              clearTempListTimeOut = null
+              clearTimeout(clearTempEnemyListTimeOut)
+              clearTempEnemyListTimeOut = null
             }, GameModeConfig.enemyAirBulletMoveTime * 1000 * 2)
           }
           clearInterval(enemyAirBulletTime)
@@ -158,16 +175,16 @@ window.onload = () => {
       //敌方战机子弹列表遍历延时器
       /*****************************************************************/
       //开启敌方子弹与我方战机对象碰撞检测函数
-      let calculationmyBulletAndEnemyAirInterval = setTimeout( () => {
-        let result
-        result = UnderScore.throttle( () => {
-          BulletBattle.calculationBulletAndAir(enemyAirBulletList, myAirList, config.bulletFather)
+      let calculationmyBulletAndEnemyAirInterval
+      calculationmyBulletAndEnemyAirInterval = setTimeout( () => {
+        UnderScore.throttle( () => {
+          BulletBattle.calculationBulletAndAir( enemyAirBulletList,
+                                                myAirList,
+                                                config.bulletFather)
           // 遍历敌方子弹对象列表
           myAirDom.innerHTML = myAir.life
-          // DelMyAir(myAir);
           // 每3帧执行一次
-        }, 1000/config.fps*3 )()
-        result = null
+        }, 3000/config.fps)()
         clearTimeout(calculationmyBulletAndEnemyAirInterval)
         calculationmyBulletAndEnemyAirInterval = null
         // 每一帧执行一次
@@ -175,38 +192,65 @@ window.onload = () => {
       /*****************************************************************/
       //我方战机子弹定时器
       if (!myAirBulletTime) {
-        // 子弹移动延时器
-        let myBulletMoveTime
+        // 生成的我方子弹对象
         let myBullet
         // 我方战机子弹生成定时器
         myAirBulletTime = setInterval( () => {
+          /*****************************************************************/
           // 开始创建子弹对象
-          myBullet = BulletBattle.BulletPushList(myAirDom, true, GameModeConfig.myAirBulletAttack, config.bulletSize, GameModeConfig.myAirBulletSizeSelect, myAirBulletList)
+          myBullet = BulletBattle.BulletPushList(myAirDom,
+                                                 true,
+                                                 GameModeConfig.myAirBulletAttack,
+                                                 config.bulletSize, 
+                                                 GameModeConfig.myAirBulletSizeSelect,
+                                                 myAirBulletList)
 
-          //为子弹节点添加动画结束后的节点删除事件
+          // 为子弹节点添加动画结束后的节点删除事件
           function transitionend() {
-            try {config.bulletFather.removeChild(myBullet.bullet)} catch (error) {}
+            try {
+              config.bulletFather.removeChild(myBullet.bullet)
+            } catch (error) {}
           }
 
-          let bulletAddEventListener
-          bulletAddEventListener = myBullet.bullet.addEventListener('transitionend', transitionend)
-          let bulletRemoveEventListener = setTimeout( () => {
+          myBullet.bullet.addEventListener('transitionend', transitionend)
+          
+          let myBulletRemoveEventListener = Symbol()
+          myBulletRemoveEventListener = setTimeout( () => {
+            // 移除监听事件
             myBullet.bullet.removeEventListener('transitionend', transitionend)
-            clearTimeout(bulletRemoveEventListener)
-            bulletRemoveEventListener = null
+            clearTimeout(myBulletRemoveEventListener)
+            myBulletRemoveEventListener = null
+            // 当子弹移动动画时长结束，移除监听事件
           }, GameModeConfig.myAirBulletMoveTime * 1000)
-          bulletAddEventListener = null
+          myAirBulletRemoveEventListenerList.push(myBulletRemoveEventListener)
 
+
+          /*****************************************************************/
           // 子弹移动延时器
+          let myBulletMoveTime
           if (!myBulletMoveTime) {
             myBulletMoveTime = setTimeout( () => {
-              BulletBattle.airBulletMove(myBullet, true, GameModeConfig.myBulletMoveTime)
+              BulletBattle.airBulletMove( myBullet,
+                                          true,
+                                          GameModeConfig.myBulletMoveTime)
               clearTimeout(myBulletMoveTime)
               myBulletMoveTime = null
               // 第二帧开始让子弹移动
-            }, 1000/config.fps)
+            }, 3000/config.fps)
           }
 
+          // 创建临时列表清理延时器，清除监听事件已经结束的我方子弹对象列表
+          if (!clearTempMyListTimeOut) {
+            clearTempMyListTimeOut = setTimeout( () => {
+              myAirBulletRemoveEventListenerList.forEach( (obj, index) => {
+                clearTimeout(obj)
+                myAirBulletRemoveEventListenerList[index] = null
+                myAirBulletRemoveEventListenerList.splice(index, 1)
+              })
+              clearTimeout(clearTempMyListTimeOut)
+              clearTempMyListTimeOut = null
+            }, GameModeConfig.myAirBulletMoveTime * 1000 * 2)
+          }
           clearInterval(myAirBulletTime)
           myAirBulletTime = null
         }, 1000 / GameModeConfig.myAirBulletSpeed)
@@ -216,24 +260,23 @@ window.onload = () => {
       //开启我方子弹与敌方战机对象碰撞检测函数
       let calculationBulletAndAirInterval
       calculationBulletAndAirInterval = setTimeout( () => {
-        let result
-        result = UnderScore.throttle( () => {
-          BulletBattle.calculationBulletAndAir(myAirBulletList, enemyAirList, config.bulletFather)
-          let enemyAirListForEach
-          enemyAirListForEach = enemyAirList.forEach( (air, index) => {
+        UnderScore.throttle( () => {
+          BulletBattle.calculationBulletAndAir( myAirBulletList,
+                                                enemyAirList,
+                                                config.bulletFather)
+          enemyAirList.forEach( (air, index) => {
             // 启动删除生命值为0的敌机函数
-            EnemyAirBattle.DelEnemyAir(air, index, enemyAirList)
+            EnemyAirBattle.DelEnemyAir( air,
+                                        index,
+                                        enemyAirList)
           })
-          enemyAirListForEach = null
-          // 每两帧执行一次
-        }, 1000/config.fps * 2 )()
-        result = null
+          // 每3帧执行一次
+        }, 3000/config.fps)()
         clearTimeout(calculationBulletAndAirInterval)
         calculationBulletAndAirInterval = null
         // 每一帧执行一次
-      }, 1000/config.fps )
+      }, 1000/config.fps)
       /*****************************************************************/
-      console.log(myAirBulletList)
       setIntervalBus = null
       // 第二帧开始，执行每帧刷新
     }, 1000 / config.fps)

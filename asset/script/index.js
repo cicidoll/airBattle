@@ -232,7 +232,7 @@ window.onload = () => {
             myBulletMoveTime = setTimeout( () => {
               BulletBattle.airBulletMove( myBullet,
                                           true,
-                                          GameModeConfig.myBulletMoveTime)
+                                          GameModeConfig.myAirBulletMoveTime)
               clearTimeout(myBulletMoveTime)
               myBulletMoveTime = null
               // 第二帧开始让子弹移动
